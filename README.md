@@ -1,16 +1,16 @@
 # devops
 devops schemas
 
-- Autentication\n
-    Zitadel https://zitadel.com/
+- Autentication<br />
+    Zitadel https://zitadel.com/<br />
 
-- GitOps
-    Core ArgoCD https://argo-cd.readthedocs.io/
-    Secret operator https://external-secrets.io/
+- GitOps<br />
+    Core ArgoCD https://argo-cd.readthedocs.io/<br />
+    Secret operator https://external-secrets.io/<br />
 
-- Logging
-    Vector (agents and proccesing) https://vector.dev/
-    Parseable https://www.parseable.com/
+- Logging<br />
+    Vector (agents and proccesing) https://vector.dev/<br />
+    Parseable https://www.parseable.com/<br />
 
-- Monitoring
+- Monitoring<br />
     VictoriaMetrics https://victoriametrics.com/
