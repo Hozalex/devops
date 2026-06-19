@@ -1,0 +1,170 @@
+<mxfile host="Electron" agent="sre-bot-docs">
+  <diagram id="sre-bot-arch" name="SRE Bot Architecture">
+    <mxGraphModel dx="1751" dy="1358" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1550" pageHeight="1220" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontStyle=1;fontSize=18;" value="SRE bot: indexing (background) + query (on demand)" vertex="1">
+          <mxGeometry height="30" width="1460" x="40" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="zoneA" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;verticalAlign=top;fontStyle=1;fontSize=13;opacity=50;" value="INDEXING — k8s-watcher (daemon, always running in background)" vertex="1">
+          <mxGeometry height="560" width="510" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="w1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;" value="Watches all clusters&lt;br&gt;dev / infra / stage / prod&lt;br&gt;(Deployment, Service, RabbitmqCluster…)" vertex="1">
+          <mxGeometry height="56" width="250" x="130" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="w2" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;" value="Resource changed?&lt;br&gt;(spec hash comparison)" vertex="1">
+          <mxGeometry height="94" width="210" x="150" y="195" as="geometry" />
+        </mxCell>
+        <mxCell id="w3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontStyle=1;" value="EMBED the spec → vector&lt;br&gt;(via embeddings-api)" vertex="1">
+          <mxGeometry height="50" width="250" x="130" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="w4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;" value="Write to DB (enriched = false)" vertex="1">
+          <mxGeometry height="48" width="250" x="130" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="w5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=11;" value="Haiku writes a «semantic description»&lt;br&gt;(what it does, what depends on it, what breaks).&lt;br&gt;&lt;br&gt;ALWAYS on a STRUCTURE change of stable&lt;br&gt;kinds (Deployment / StatefulSet / DaemonSet /&lt;br&gt;Ingress / HTTPRoute / Gateway / CronJob).&lt;br&gt;A replicas change does NOT trigger it." vertex="1">
+          <mxGeometry height="124" width="270" x="120" y="486" as="geometry" />
+        </mxCell>
+        <mxCell id="zoneB" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;verticalAlign=top;fontStyle=1;fontSize=13;opacity=50;" value="QUERY — bot (on user demand)" vertex="1">
+          <mxGeometry height="560" width="460" x="920" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="b0" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;" value="👤 User (Telegram)" vertex="1">
+          <mxGeometry height="40" width="220" x="1040" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="b1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;" value="Main agent «dispatcher» (Haiku)&lt;br&gt;decides what to do" vertex="1">
+          <mxGeometry height="50" width="380" x="960" y="195" as="geometry" />
+        </mxCell>
+        <mxCell id="b2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;" value="search_infrastructure&lt;br&gt;«what is this service, dependencies,&lt;br&gt;blast radius, past incident»" vertex="1">
+          <mxGeometry height="70" width="380" x="960" y="285" as="geometry" />
+        </mxCell>
+        <mxCell id="b3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;" value="Routing → matching skill:&lt;br&gt;pod / node check / alert triage" vertex="1">
+          <mxGeometry height="56" width="380" x="960" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="b4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;" value="Subagents: Haiku (simple) / Sonnet (deep dive)" vertex="1">
+          <mxGeometry height="50" width="380" x="960" y="500" as="geometry" />
+        </mxCell>
+        <mxCell id="s1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;" value="EMBEDDINGS-API (shared)&lt;br&gt;text → vector (384 numbers)" vertex="1">
+          <mxGeometry height="60" width="240" x="610" y="640" as="geometry" />
+        </mxCell>
+        <mxCell id="s2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;" value="DATABASE: Postgres + pgvector&lt;br&gt;&lt;br&gt;infrastructure: cluster | kind | name | ns | description | VECTOR&lt;br&gt;incidents: cluster | summary | severity | ns | VECTOR&lt;br&gt;&lt;br&gt;search = «nearest by meaning» (vector comparison)" vertex="1">
+          <mxGeometry height="120" width="620" x="390" y="770" as="geometry" />
+        </mxCell>
+        <mxCell id="c1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="Kubernetes&lt;br&gt;dev / infra / stage / prod&lt;br&gt;(READ-ONLY, strictly via --context)" vertex="1">
+          <mxGeometry height="90" width="280" x="160" y="980" as="geometry" />
+        </mxCell>
+        <mxCell id="c2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="get_logs → PII redactor&lt;br&gt;strips email / phone / national ID /&lt;br&gt;cards / tokens / names BEFORE return" vertex="1">
+          <mxGeometry height="90" width="300" x="640" y="980" as="geometry" />
+        </mxCell>
+        <mxCell id="c3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="Answer + cost&lt;br&gt;($, time, turns) → Telegram" vertex="1">
+          <mxGeometry height="90" width="300" x="1100" y="980" as="geometry" />
+        </mxCell>
+        <mxCell id="ew1" edge="1" parent="1" source="w1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#6c8ebf;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" target="w2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ew2" edge="1" parent="1" source="w2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#6c8ebf;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" target="w3" value="changed">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ew3" edge="1" parent="1" source="w3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#6c8ebf;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" target="w4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ew4" edge="1" parent="1" source="w4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#6c8ebf;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" target="w5" value="on structure change">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ew5" edge="1" parent="1" source="w5" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeColor=#6c8ebf;exitX=0;exitY=0.5;entryX=0;entryY=0.5;curved=0;" target="w3" value="enriched=true (re-embed)">
+          <mxGeometry relative="1" x="-0.1171" y="-12" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="90" y="548" />
+              <mxPoint x="90" y="550" />
+              <mxPoint x="58" y="550" />
+              <mxPoint x="58" y="345" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ewE" edge="1" parent="1" source="w3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeColor=#d6b656;fontStyle=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;curved=0;" target="s1" value="→ vector">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="450" y="345" />
+              <mxPoint x="450" y="670" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ewW" edge="1" parent="1" source="w4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeColor=#b85450;fontStyle=1;exitX=1;exitY=0.5;entryX=0.264;entryY=-0.032;curved=0;jumpStyle=arc;entryDx=0;entryDy=0;entryPerimeter=0;" target="s2" value="write">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="554" y="424" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eb0" edge="1" parent="1" source="b0" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#82b366;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" target="b1" value="query">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eb1" edge="1" parent="1" source="b1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#82b366;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" target="b2" value="knowledge base first">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eb2" edge="1" parent="1" source="b2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeColor=#d6b656;fontStyle=1;exitX=0;exitY=0.3;entryX=0.5;entryY=0;curved=0;" target="s1" value="query → vector">
+          <mxGeometry relative="1" x="-0.3616" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="730" y="306" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eb3" edge="1" parent="1" source="s2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;dashed=1;strokeColor=#b85450;fontStyle=1;exitX=0.782;exitY=-0.004;entryX=0;entryY=0.6;curved=0;exitDx=0;exitDy=0;exitPerimeter=0;" target="b2" value="READ: nearest by meaning">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="870" y="769" />
+              <mxPoint x="870" y="327" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ebctx" edge="1" parent="1" source="b2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#82b366;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" target="b3" value="context understood">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eb4" edge="1" parent="1" source="b3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#82b366;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" target="b4" value="delegates">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ec1" edge="1" parent="1" source="b4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeColor=#d79b00;exitX=0.4;exitY=1;entryX=0.5;entryY=0;curved=0;" target="c1" value="read state">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1110" y="550" />
+              <mxPoint x="1110" y="920" />
+              <mxPoint x="300" y="920" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ec2" edge="1" parent="1" source="b4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeColor=#d79b00;exitX=0.6;exitY=1;entryX=0.5;entryY=0;curved=0;" target="c2" value="logs">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1190" y="550" />
+              <mxPoint x="1190" y="945" />
+              <mxPoint x="790" y="945" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ec3" edge="1" parent="1" source="c2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;dashed=1;strokeColor=#d79b00;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" target="c1" value="kubectl logs (read-only)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ec4" edge="1" parent="1" source="c1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeColor=#d79b00;exitX=0.5;exitY=1;entryX=0.5;entryY=1;curved=0;" target="c3" value="answer assembled">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="300" y="1130" />
+              <mxPoint x="1250" y="1130" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ec5" edge="1" parent="1" source="c2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#d79b00;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="c3" value="redacted logs">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ec6" edge="1" parent="1" source="c3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;dashed=1;strokeColor=#666666;exitX=1;exitY=0.5;entryX=1;entryY=0.5;curved=0;" target="b0" value="answer to user">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1450" y="1025" />
+              <mxPoint x="1450" y="140" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
