@@ -1,6 +1,8 @@
 # devops
 devops schemas
 
+- AI SRE bot<br />
+
 - Autentication<br />
     Zitadel https://zitadel.com/<br />
 
